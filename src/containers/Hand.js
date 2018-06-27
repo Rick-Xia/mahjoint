@@ -12,6 +12,8 @@ class Hand extends React.Component {
             p: [0,0,0,0,0,0,0,0,0],
             d: [0,0,0,0,0,0,0]
         };
+        this.handTiles = [];
+        this.curCombis = [];
         // Takeaway: keep data that you intend to share across components in store.
         // I should put all tiles info to Redux store
         this.id = "hand";
@@ -23,22 +25,26 @@ class Hand extends React.Component {
         };
     }
 
-    isThisTileRunOut(type, num, arg) {
+    // Are tiles to add have been run out?
+    isThisTileRunOut( type, num, arg ) {
+        // TODO: add check for arg 'chi'
         return this.curTiles[type][num - 1] >= 4 ||
                 ( arg === "pon" && this.curTiles[type][num - 1] >= 2 ) ||
                 ( (arg === "kan" || arg === "ckan") && this.curTiles[type][num - 1] >= 1 );
     }
 
-    pickTilesFromDeck( type, tiles ) {
-        for ( let index in tiles ) {
-            this.curTiles[ type ][ tiles[index]-1 ] += 1;
-            this.amount++;
+    pickTilesFromDeck( type, tilesToPick ) {
+        const amountbeforeadd = this.amount
+        for ( let index in tilesToPick ) {
+            this.curTiles[ type ][ tilesToPick[index]-1 ] += 1;
+            this.amount += (this.amount-amountbeforeadd >= 3)? 0 : 1;
         }
         console.log(`now amount is ` + this.amount)
+        if ( this.amount === this.max ) this.props.onFullHand( this.handTiles, this.curCombis );
     }
 
     addTiles ( type, num, arg ) {
-        if (arg !== 0) console.log(typeof arg);
+        if ( arg ) console.log( arg );
         if ( this.amount >= this.max || (arg && this.amount + 3 > this.max) ) {
             return console.log(`the hand is full ` + this.amount);
         }
@@ -59,8 +65,6 @@ class Hand extends React.Component {
         }
         return true;
     }
-
-    // addTileGroup ( type, num ) {}
 
     addCombiChi ( type, num ) {
         let lastTile = (num + 2 > 9)? 9 : num + 2, returnTileGroup = [];
@@ -84,10 +88,12 @@ class Hand extends React.Component {
         );
         let newHandTiles = this.state.tiles.slice();
         newHandTiles.push( newChiTileGroup );
+        let newCombi = ["chi", basekey, type, ...returnTileGroup]
+        this.curCombis.push( newCombi );
+
         this.setState({ tiles: newHandTiles });
 
         this.pickTilesFromDeck( type, returnTileGroup );
-        if ( this.amount === this.max ) this.props.onFullHand( this.curTiles );
     }
 
     addCombiPon ( type, num ) {
@@ -112,10 +118,12 @@ class Hand extends React.Component {
 
         let newHandTiles = this.state.tiles.slice();
         newHandTiles.push( newChiTileGroup );
+        let newCombi = [ "pon", basekey, type, ...returnTileGroup ]
+        this.curCombis.push( newCombi );
+
         this.setState({ tiles: newHandTiles });
 
         this.pickTilesFromDeck( type, returnTileGroup );
-        if ( this.amount === this.max ) this.props.onFullHand( this.curTiles );
     }
 
     addCombiKan ( type, num ) {
@@ -126,7 +134,6 @@ class Hand extends React.Component {
             return console.log(`Some tiles have been run out`);
         }
 
-
         let basekey = this.amountAdded++;
         let newChiTileGroup = (
             <TileGroup
@@ -141,15 +148,17 @@ class Hand extends React.Component {
 
         let newHandTiles = this.state.tiles.slice();
         newHandTiles.push( newChiTileGroup );
+        let newCombi = ["kan", basekey, type, ...returnTileGroup]
+        this.curCombis.push( newCombi );
+
         this.setState({ tiles: newHandTiles });
 
         this.pickTilesFromDeck( type, returnTileGroup );
-        if ( this.amount === this.max ) this.props.onFullHand( this.curTiles );
     }
 
     addCombiCkan ( type, num ) {
         let returnTileGroup = [];
-        for( let i = 0; i <= 4; ++i ) returnTileGroup.push( num );
+        for( let i = 0; i < 4; ++i ) returnTileGroup.push( num );
 
         if ( !this.checkTileAvailability( type, returnTileGroup ) ) {
             return console.log(`Some tiles have been run out`);
@@ -169,10 +178,12 @@ class Hand extends React.Component {
 
         let newHandTiles = this.state.tiles.slice();
         newHandTiles.push( newChiTileGroup );
+        let newCombi = ["ckan", basekey, type, ...returnTileGroup]
+        this.curCombis.push( newCombi );
+
         this.setState({ tiles: newHandTiles });
 
         this.pickTilesFromDeck( type, returnTileGroup );
-        if ( this.amount === this.max ) this.props.onFullHand( this.curTiles );
     }
 
     addSingleTile ( type, num ) {
@@ -183,7 +194,7 @@ class Hand extends React.Component {
         }
 
         let basekey = this.amountAdded++;
-        let newChiTileGroup = (
+        let newTile = (
             <Tile
             key={basekey}
             id={basekey}
@@ -195,27 +206,28 @@ class Hand extends React.Component {
         );
 
         let newHandTiles = this.state.tiles.slice();
-        newHandTiles.push( newChiTileGroup );
+        newHandTiles.push( newTile );
         this.setState({ tiles: newHandTiles });
+        this.handTiles.push( [ type, num, basekey ] )
 
         this.pickTilesFromDeck( type, returnTileGroup );
-        if ( this.amount === this.max ) this.props.onFullHand( this.curTiles );
     }
 
-    removeOneTileFromHand(type, num) {
-        this.curTiles[type][num - 1] -= 1;
-        this.props.onBreakHand();
-    }
-
-    handleHandTileClick = (key) => {
+    handleHandTileClick = ( key ) => {
         let newTiles = this.state.tiles.filter(t => {
             if ( t.props.id !== key ) return true;
             else {
                 this.curTiles[t.props.tiletype][t.props.num - 1] -= 1;
+                this.amount -= 1;
                 return false;
             }
         });
         this.setState({ tiles: newTiles });
+        console.log(JSON.stringify(this.curTiles));
+        this.handTiles = this.handTiles.filter(t => {
+            return t[2] !== key
+        })
+        console.log(JSON.stringify(this.handTiles));
         this.props.onBreakHand();
     }
 
@@ -229,7 +241,12 @@ class Hand extends React.Component {
         }
         this.setState({ tiles: newTiles });
 
-        console.log(JSON.stringify(this.curTiles));
+        this.curCombis = this.curCombis.filter( com => {
+            return com[1] !== key;
+        });
+
+        console.log('curTiles are: ' + JSON.stringify(this.curTiles));
+        console.log('curCombis are: ' + JSON.stringify(this.curCombis));
         this.props.onBreakHand();
     }
 

@@ -6,10 +6,14 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
+import Popover from 'material-ui/Popover';
 import MenuIcon from '@material-ui/icons/Menu';
 import DeleteForever from '@material-ui/icons/DeleteForever'
+import Translate from '@material-ui/icons/Translate'
+import List from '@material-ui/icons/FormatListNumbered'
+import FrePanel from '../components/FrequencyPanel'
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1,
   },
@@ -20,65 +24,81 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
-};
+  typography: {
+    margin: theme.spacing.unit * 2,
+  },
+})
 
-// function ButtonAppBar(props) {
-//   const { classes } = props;
-//   return (
-//     <div className={classes.root}>
-//       <AppBar position="static">
-//         <Toolbar>
-//           <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-//             <MenuIcon />
-//           </IconButton>
+const onClickDummy = () => {}
 
-//           <Typography variant="title" color="inherit" className={classes.flex}>
-//             MAHJOINT
-//           </Typography>
-
-//           <Button color="inherit" onClick={() => props.callback}>
-//             <DeleteForever />
-//           </Button>
-
-//         </Toolbar>
-//       </AppBar>
-//     </div>
-//   );
-// }
-
+// function ButtonAppBar ( props )  {
 class ButtonAppBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      root: props.root,
-      menuButton: props.menuButton,
-      flex: props.flex,
-      clearTIles: props.clearTiles
-    };
+  state = {
+    open: false,
+    positionTop: 200, // Just so the popover can be spotted more easily
+    positionLeft: 400, // Same as above
+    anchorReference: 'anchorPosition',
   }
+
+  handleClickButton = () => {
+    this.setState({ open: true, })
+  }
+
+  handleClose = () => {
+    this.setState({ open: false, })
+  }
+
+  anchorEl = null;
 
   render() {
-    return (
-      <div className={this.state.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton className={this.state.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
+  const { classes } = this.props
+  const {
+    open,
+    positionTop,
+    positionLeft,
+    anchorReference,
+  } = this.state;
 
-            <Typography variant="title" color="inherit" className={this.state.flex}>
-              MAHJOINT
-            </Typography>
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <MenuIcon />
+          </IconButton>
 
-            <Button color="inherit" onClick={() => this.state.clearTIles()}>
-              <DeleteForever />
-            </Button>
+          <Typography variant="title" color="inherit" className={classes.flex}>
+            MAHJOINT
+          </Typography>
 
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-  }
+          <Button color="inherit" onClick={this.handleClickButton}>
+            <List />
+          </Button>
+
+          <Button color="inherit" onClick={() => onClickDummy()}>
+            <Translate />
+          </Button>
+
+          <Button color="inherit" onClick={() => this.props.clearTiles()}>
+            <DeleteForever />
+          </Button>
+
+        </Toolbar>
+
+        <Popover
+          open={open}
+          anchorEl={this.anchorEl}
+          anchorReference={anchorReference}
+          anchorPosition={{ top: positionTop, left: positionLeft }}
+          onClose={this.handleClose}
+        >
+          <FrePanel />
+        </Popover>
+        
+      </AppBar>
+    </div>
+  )
+}
 }
 
 ButtonAppBar.propTypes = {

@@ -2,8 +2,8 @@ import React from 'react';
 import ArgumentPanel from '../components/ArgumentPanel';
 
 class ArgumentContainer extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor( props ) {
+        super( props );
         this.state = {
             ready: "0",
             oneshot: "0",
@@ -11,16 +11,25 @@ class ArgumentContainer extends React.Component {
             ron: "0",
             quadDraw: "0",
             quadDrawErr: null,
-            dora: 0
-        };
+            dora: 0,
+            prevalentWind: "1",
+            seatWind: "1",
+        }
     }
 
     readArguments() {
-        return this.state;
+        return this.state
     }
 
-    handleReadyHandChange = this.handleReadyHandChange.bind(this);
-    handleReadyHandChange( event ) {
+    handlePrevalentWindClick = ( i ) => {
+        this.setState({ prevalentWind: i })
+    }
+
+    handleSeatWindClick = ( i ) => {
+        this.setState({ seatWind: i })
+    }
+
+    handleReadyHandChange = ( event ) => {
         if ( event.target.value === "0" && this.state.oneshot !== "0" ) {
             this.setState({
                 ready: event.target.value,
@@ -31,8 +40,7 @@ class ArgumentContainer extends React.Component {
         }
     }
 
-    handleOneShotChange = this.handleOneShotChange.bind(this);
-    handleOneShotChange( event ) {
+    handleOneShotChange = ( event ) => {
         if ( this.state.ready === "0" ) {
             this.setState({
                 ready: "1",
@@ -44,16 +52,14 @@ class ArgumentContainer extends React.Component {
         }
     };
 
-    handleClose = this.handleClose.bind(this);
-    handleClose() {
+    handleClose = () => {
         this.setState({
             oneshotErr: null,
             quadDrawErr: null
         });
     };
 
-    handleRonChange = this.handleRonChange.bind(this);
-    handleRonChange( event ) {
+    handleRonChange = ( event ) => {
         if ( event.target.value === "1" && this.state.quadDraw === "2" ) {
             this.setState({
                 ron: event.target.value,
@@ -65,8 +71,7 @@ class ArgumentContainer extends React.Component {
         }
     }
 
-    handleQuadDrawChange = this.handleQuadDrawChange.bind(this);
-    handleQuadDrawChange( event ) {
+    handleQuadDrawChange = ( event ) => {
         if ( event.target.value === "2" && this.state.ron === "1" ) {
             this.setState({
                 ron: "0",
@@ -78,8 +83,7 @@ class ArgumentContainer extends React.Component {
         }
     }
 
-    handleQuadChange = this.handleQuadChange.bind(this);
-    handleQuadChange( event ) {
+    handleQuadChange = ( event ) => {
         if ( this.state.draw !== "0" ) {
             this.setState({
                 draw: "0",
@@ -90,14 +94,12 @@ class ArgumentContainer extends React.Component {
         this.setState({ quad: event.target.value });
     }
 
-    addDora = this.addDora.bind(this);
-    addDora() {
+    addDora = () => {
         let newdora = this.state.dora + 1;
         this.setState({ dora: newdora });
     }
 
-    removeDora = this.removeDora.bind(this);
-    removeDora() {
+    removeDora = () => {
         let newdora = this.state.dora - 1;
         this.setState({ dora: ( newdora<0? 0 : newdora ) });
     }
@@ -110,7 +112,9 @@ class ArgumentContainer extends React.Component {
                     quadDraw={this.state.quadDraw} onChangeQuadDraw={this.handleQuadDrawChange}
                     dora={this.state.dora} removeDora={this.removeDora} addDora={this.addDora}
                     oneshotErr={this.state.oneshotErr} quadDrawErr={this.state.quadDrawErr}
-                    handleClose={this.handleClose}/>;
+                    curPrevalentWind={this.state.prevalentWind} curSeatWind={this.state.seatWind}
+                    onPopoverClose={this.handleClose} onPrevalentWindClick={this.handlePrevalentWindClick}
+                    onSeatWindClick={this.handleSeatWindClick} />;
     }
 }
 

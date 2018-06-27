@@ -11,17 +11,22 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Tile from '../components/Tile';
 import { Grid } from 'material-ui';
+import { withStyles } from 'material-ui/styles';
+
+const styles = theme => ({
+    typography: {
+      margin: theme.spacing.unit * 2,
+    },
+});
 
 class ArgumentPanel extends React.Component {
 
-    onClickDummy() {}
-
-    generateWinds = ( wind ) => {
+    generateWinds = ( wind, handleClick ) => {
         let grid = [];
         for ( let i=1; i<=4; ++i ) {
             grid.push(
                 <Grid key={i} item>
-                    <Tile src={i + 'd'} onClick={this.onClickDummy} />
+                    <Tile src={i + 'd'} onClick={() => handleClick(i)} wind={wind} />
                 </Grid>
             );
         }
@@ -33,7 +38,7 @@ class ArgumentPanel extends React.Component {
         const quadDrawErr = this.props.quadDrawErr;
 
         return (
-        <Grid container>
+        <Grid container justify="center" spacing={40} style={{marginTop: 40}}>
             <Grid className="readyHand-radio" item>
                 <FormControl component="fieldset">
                     <FormLabel component="legend">Ready Hand</FormLabel>
@@ -98,14 +103,17 @@ class ArgumentPanel extends React.Component {
                 </FormControl>
             </Grid>
 
-            <Grid className="dora-wind-panel" item>
-                <Grid container direction="column">
-                    <Grid className="dora" item>
-                        <Grid container direction="row">
+            <Grid className="dora-wind-panel" item >
+                <Grid container direction="column" >
+
+                    <Grid className="dora" item >
+                        <Grid container direction="row" >
+
                             <Grid item>
                                 <p> DORA </p>
                             </Grid>
-                            <Grid item>
+
+                            <Grid item style={{ marginLeft: "auto" }}>
                                 <IconButton color="primary" className="remove-dora" onClick={this.props.removeDora} aria-label="Remove a dora">
                                     <RemoveIcon />
                                 </IconButton>
@@ -121,14 +129,18 @@ class ArgumentPanel extends React.Component {
                         </Grid>
                     </Grid>
 
-                    <Grid className="prevalent-wind" item container justify='flex-end'>
-                        <p>Prevalent wind</p>
-                        { this.generateWinds('prevalent') }
+                    <Grid className="prevalent-wind" item container>
+                        <Grid item style={{ marginRight: "auto" }}>
+                            <p>Prevalent</p>
+                        </Grid>
+                        { this.generateWinds(this.props.curPrevalentWind, this.props.onPrevalentWindClick) }
                     </Grid>
 
-                    <Grid className="player-wind" item container justify='flex-end'>
-                        <p>Player wind</p>
-                        { this.generateWinds('player') }
+                    <Grid className="seat-wind" item container>
+                        <Grid item style={{ marginRight: "auto" }}>
+                            <p>Seat</p>
+                        </Grid>
+                        { this.generateWinds(this.props.curSeatWind, this.props.onSeatWindClick) }
                     </Grid>
                 </Grid>
             </Grid>
@@ -136,7 +148,7 @@ class ArgumentPanel extends React.Component {
             <Popover
                 open={Boolean(oneshotErr)}
                 anchorEl={oneshotErr}
-                onClose={this.props.handleClose}
+                onClose={this.props.onPopoverClose}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'center',
@@ -146,13 +158,13 @@ class ArgumentPanel extends React.Component {
                     horizontal: 'center',
                 }}
             >
-                <Typography className="OneShot-popover-text">You have to be "Ready" to achieve One-Shot</Typography>
+                <Typography className={this.props.classes.typography}>You have to be "Ready" to achieve One-Shot</Typography>
             </Popover>
 
             <Popover
                 open={Boolean(quadDrawErr)}
                 anchorEl={quadDrawErr}
-                onClose={this.props.handleClose}
+                onClose={this.props.onPopoverClose}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'center',
@@ -162,10 +174,10 @@ class ArgumentPanel extends React.Component {
                     horizontal: 'center',
                 }}
             >
-                <Typography className="OneShot-popover-text">Robbing Quad is not compatible with Self-pick</Typography>
+                <Typography className={this.props.classes.typography}>Robbing Quad is not compatible with Self-pick</Typography>
             </Popover>
         </Grid>);
     }
 }
 
-export default ArgumentPanel;
+export default withStyles(styles)(ArgumentPanel)
