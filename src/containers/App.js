@@ -3,8 +3,8 @@ import '../styles/App.css';
 import Nav from './Nav';
 import Deck from './Deck';
 import Hand from './Hand';
-import Args from './ArgumentContainer';
-import Result from './ResultContainer';
+import ArgumentContainer from './ArgumentContainer';
+import ResultContainer from './ResultContainer';
 import { Grid } from 'material-ui';
 
 class App extends Component {
@@ -32,12 +32,11 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Grid className="Grid-top-wrapper" container direction="column" justify="center">
-          <Grid className="Grid-navbar-item" item >
-            <Nav id="navbar" clearTiles={this.clearAll} />
-          </Grid>
+        <Nav id="navbar" clearTiles={this.clearAll} />
 
-          <Grid className="Grid-deck-item" item style={{marginBottom: 50, marginTop: 30}}>
+        <Grid className="Highest-wrapper" container wrap="nowrap" direction="column" justify="center">
+
+          <Grid className="Deck-wrapper" item style={{marginTop: 70}}>
             <Deck id="all-tiles" addtohand={this.addTileToHand} />
           </Grid>
 
@@ -51,11 +50,11 @@ class App extends Component {
           </Grid>
 
           <Grid className="Grid-args-item" item>
-            <Args ref='args' />
+            <ArgumentContainer ref='args' />
           </Grid>
           
           <Grid className="Grid-result-item" item>
-            <Result ref='result' />
+            <ResultContainer ref='result' />
           </Grid>
 
         </Grid>
@@ -65,17 +64,3 @@ class App extends Component {
 }
 
 export default App;
-
-
-/*
-          <Grid className="Grid-function-panel-wrapper" item style={{marginTop: 40}}>
-            <Grid container alignItems="center" justify="space-around">
-              <Grid className="Grid-args-item" item>
-                <Args ref='args' />
-              </Grid>
-              <Grid className="Grid-result-item" item>
-                <Result ref='result' />
-              </Grid>
-            </Grid>
-          </Grid>
-*/

@@ -15,16 +15,13 @@ class Deck extends React.Component {
                 ckan:   false
             }
         }
-
-        this.handleCombinationClick = this.handleCombinationClick.bind(this);
-        this.getCurrentCombination = this.getCurrentCombination.bind(this);
     }
 
     switchButtonColor( state ) {
         return state? "secondary" : "primary";
     }
 
-    handleCombinationClick ( e ) {
+    handleCombinationClick = ( e ) => {
         let newCombi = this.state.combi
         for ( let t in newCombi ) {
             if ( t === e ) newCombi[t] = !newCombi[t]
@@ -33,7 +30,7 @@ class Deck extends React.Component {
         this.setState({ combi:  newCombi })
     }
 
-    getCurrentCombination() {
+    getCurrentCombination = () => {
         for ( let t in this.state.combi ) {
             if ( this.state.combi[t] ) return t
         }
@@ -42,40 +39,42 @@ class Deck extends React.Component {
 
     render() {
         return (
-            <Grid container spacing={24} direction="column">
+            <Grid container spacing={8} direction="column" style={{width:"100%"}}>
                 { this.loadTileRow() }
-                <Grid container justify='center' spacing={40} >
-                    <Grid item>
-                        <Button id="chi" variant="raised"
-                                color={this.switchButtonColor(this.state.combi.chi)}
-                                onClick={() => this.handleCombinationClick('chi')}
-                        >
-                            Chi
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button id="pon" variant="raised"
-                                color={this.switchButtonColor(this.state.combi.pon)}
-                                onClick={() => this.handleCombinationClick('pon')}
-                        >
-                            Pon
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button id="kan" variant="raised"
-                                color={this.switchButtonColor(this.state.combi.kan)}
-                                onClick={() => this.handleCombinationClick('kan')}
-                        >
-                            Kan
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button id="ckan" variant="raised"
-                                color={this.switchButtonColor(this.state.combi.ckan)}
-                                onClick={() => this.handleCombinationClick('ckan')}
-                        >
-                            Closed Kan
-                        </Button>
+                <Grid item>
+                    <Grid container justify='center' spacing={40} style={{marginTop: 20, width:"100%"}}>
+                        <Grid item>
+                            <Button id="chi" variant="raised"
+                                    color={this.switchButtonColor(this.state.combi.chi)}
+                                    onClick={() => this.handleCombinationClick('chi')}
+                            >
+                                Chi
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button id="pon" variant="raised"
+                                    color={this.switchButtonColor(this.state.combi.pon)}
+                                    onClick={() => this.handleCombinationClick('pon')}
+                            >
+                                Pon
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button id="kan" variant="raised"
+                                    color={this.switchButtonColor(this.state.combi.kan)}
+                                    onClick={() => this.handleCombinationClick('kan')}
+                            >
+                                Kan
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button id="ckan" variant="raised"
+                                    color={this.switchButtonColor(this.state.combi.ckan)}
+                                    onClick={() => this.handleCombinationClick('ckan')}
+                            >
+                                Closed Kan
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>
@@ -109,8 +108,8 @@ class Deck extends React.Component {
         let tileArray = [], tileTypes = ['s', 'm', 'p', 'd'];
         tileTypes.map((type) => {
             return tileArray.push(
-                (<Grid item key={`row_of_${type}`} className={`row_of_${type}`}>
-                    <Grid container direction="row" justify="center" spacing={24}>
+                (<Grid item key={`row_of_${type}`} className={`row_of_${type}` } style={{width:"100%"}}>
+                    <Grid container direction="row" justify="center" spacing={24} style={{width:"100%"}}>
                         { this.loadTiles(type) }
                     </Grid>
                 </Grid>)

@@ -1,23 +1,23 @@
-import React from 'react';
-import Radio from 'material-ui/Radio';
-import RadioGroup from 'material-ui/Radio/RadioGroup';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
-import FormControl from 'material-ui/Form/FormControl';
-import FormLabel from 'material-ui/Form/FormLabel';
-import Popover from 'material-ui/Popover';
-import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import Tile from '../components/Tile';
-import { Grid } from 'material-ui';
-import { withStyles } from 'material-ui/styles';
+import React from 'react'
+import Radio from 'material-ui/Radio'
+import RadioGroup from 'material-ui/Radio/RadioGroup'
+import FormControlLabel from 'material-ui/Form/FormControlLabel'
+import FormControl from 'material-ui/Form/FormControl'
+import FormLabel from 'material-ui/Form/FormLabel'
+import Popover from 'material-ui/Popover'
+import Typography from 'material-ui/Typography'
+import IconButton from 'material-ui/IconButton'
+import AddIcon from '@material-ui/icons/Add'
+import RemoveIcon from '@material-ui/icons/Remove'
+import Tile from '../components/Tile'
+import { Grid } from 'material-ui'
+import { withStyles } from 'material-ui/styles'
 
 const styles = theme => ({
     typography: {
       margin: theme.spacing.unit * 2,
     },
-});
+})
 
 class ArgumentPanel extends React.Component {
 
@@ -38,7 +38,7 @@ class ArgumentPanel extends React.Component {
         const quadDrawErr = this.props.quadDrawErr;
 
         return (
-        <Grid container justify="center" spacing={40} style={{marginTop: 40}}>
+        <Grid container justify="center" spacing={40} style={{marginTop: 40, width:"100%"}}>
             <Grid className="readyHand-radio" item>
                 <FormControl component="fieldset">
                     <FormLabel component="legend">Ready Hand</FormLabel>
@@ -104,7 +104,7 @@ class ArgumentPanel extends React.Component {
             </Grid>
 
             <Grid className="dora-wind-panel" item >
-                <Grid container direction="column" >
+                <Grid container direction="column" justify="space-around" >
 
                     <Grid className="dora" item >
                         <Grid container direction="row" >
@@ -174,7 +174,9 @@ class ArgumentPanel extends React.Component {
                     horizontal: 'center',
                 }}
             >
-                <Typography className={this.props.classes.typography}>Robbing Quad is not compatible with Self-pick</Typography>
+                <Typography className={this.props.classes.typography}>
+                    Robbing Quad is not compatible with Self-pick
+                </Typography>
             </Popover>
         </Grid>);
     }

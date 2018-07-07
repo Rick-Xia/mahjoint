@@ -7,10 +7,12 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import Popover from 'material-ui/Popover';
+
 import MenuIcon from '@material-ui/icons/Menu';
 import DeleteForever from '@material-ui/icons/DeleteForever'
 import Translate from '@material-ui/icons/Translate'
 import List from '@material-ui/icons/FormatListNumbered'
+
 import FrePanel from '../components/FrequencyPanel'
 
 const styles = theme => ({
@@ -31,7 +33,6 @@ const styles = theme => ({
 
 const onClickDummy = () => {}
 
-// function ButtonAppBar ( props )  {
 class ButtonAppBar extends React.Component {
   state = {
     open: false,
@@ -61,7 +62,7 @@ class ButtonAppBar extends React.Component {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar >
         <Toolbar>
           <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
             <MenuIcon />
