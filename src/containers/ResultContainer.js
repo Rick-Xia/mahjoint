@@ -55,7 +55,7 @@ class Result extends Component {
     }
 
     tanyao ( yaku, menzi, janto, next ) {
-        if ( janto[0] === 'd' )
+        if ( janto[0] === 'd' || janto[1] === 1 || janto[1] === 9 )
             return next( yaku, menzi, janto, next )
         for ( let m of menzi ) {
             if ( m[2] === 'd' || m[3] === 1 || m[5] === 9 )
@@ -425,7 +425,7 @@ class Result extends Component {
         let next = () => {
             let task = this.yakumanArray[index++]
             if ( !task ) return yaku
-            console.log('now task is: ' + task)
+            // console.log('now task is: ' + task)
             this[task]( yaku, menzi, janto, next )
         }
         next()
@@ -436,7 +436,7 @@ class Result extends Component {
         let next = () => {
             let task = this.yakuArray[index++]
             if ( !task ) return yaku
-            console.log('now task is: ' + task)
+            // console.log('now task is: ' + task)
             this[task]( yaku, menzi, janto, next )
         }
         next()
@@ -447,7 +447,7 @@ class Result extends Component {
         let next = () => {
             let task = this.argArray[index++]
             if ( !task ) return yaku
-            console.log('now task is: ' + task)
+            // console.log('now task is: ' + task)
             this[task]( yaku, args, next )
         }
         next()
@@ -591,11 +591,11 @@ class Result extends Component {
         console.log('zipai is: ' + JSON.stringify(zipai))
 
         // check {kokushi}, {7 duizi}
-        if ( this.kokushi(ppai, spai, mpai, zipai) ) {
+        if ( combis.length === 0 && this.kokushi(ppai, spai, mpai, zipai) ) {
             this.yaku = { "Thirteen orphans": 13 }
             return true
         }
-        if ( this.qiduizi(ppai, spai, mpai, zipai) ) {
+        if ( combis.length === 0 && this.qiduizi(ppai, spai, mpai, zipai) ) {
             this.yaku = { "Seven pairs": 2 }
             return true
         }
@@ -673,11 +673,15 @@ class Result extends Component {
         return true;
     }
 
+    // API for Hand to call calculation
     calculatePoints( tiles, combis, args ) {
         // console.log(`tiles received, which are: ${JSON.stringify(tiles)}`)
         // console.log(`Combis received, which are: ${JSON.stringify(combis)}`)
         console.log(`args received, which are: ${JSON.stringify(args)}`)
-        if ( combis.length === 0 ) this.monzen = true
+
+        if ( combis.length === 0 || combis.every(c => c[0] === 'ckan') ) {
+            this.monzen = true
+        }
         this.pWind = Number.parseInt(args.prevalentWind, 10)
         this.sWind = Number.parseInt(args.seatWind, 10)
 
