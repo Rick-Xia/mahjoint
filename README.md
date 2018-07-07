@@ -23,7 +23,7 @@ For __more features__, my plan is to add:
 May add more when I get more interesting ideas.
 
 ### Project Preview
-You can preview the current progress at [HERE](https://rick-xia.github.io/mahjoint/), which is powered by gh-pages package for create-react-app.
+You can preview the current progress at [HERE](https://rick-xia.github.io/mahjoint/).
 
 ### Special Claim
 All resources used are of online free resources. This app is only for personal development practice and will not be used for commercial purposes

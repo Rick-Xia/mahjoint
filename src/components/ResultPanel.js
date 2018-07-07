@@ -45,24 +45,31 @@ class ResultPanel extends Component {
 
     createTheFinalResultColumn( han, key ) {
         return (
-            <Typography component="p" key={"yaku " + key}>
-                { han }
-            </Typography>)
+            <Grid item key={"yaku " + key} className={this.props.classes.han}>
+                <Typography component="p" >{ han }</Typography>
+            </Grid>)
     }
 
     createYakuColumn( yaku, han, key ) {
         return (
-            <Typography component="p" key={"yaku " + key}>
-                { yaku + ": " + han + " HAN" }
-            </Typography>)
+            <Grid item key={"yaku " + key}>
+            <Grid container>
+                <Grid item className={this.props.classes.yaku}>
+                    <Typography component="p">{yaku}</Typography>
+                </Grid>
+                <Grid item className={this.props.classes.han}>
+                    <Typography component="p">{han + "  HAN"}</Typography>
+                </Grid>
+            </Grid>
+            </Grid>)
     }
 
     buildResult( valid, yaku ) {
         if ( valid === 0 ) {
-            return <Typography component="p">Waiting for a complete hand</Typography>
+            return <Grid item><Typography component="p">Waiting for a complete hand</Typography></Grid>
         }
         if ( valid === -1 ) {
-            return <Typography component="p" color="error">Invalid Hand</Typography>
+            return <Grid item><Typography component="p" color="error">Invalid Hand</Typography></Grid>
         }
 
         let cells = [], yakuKey = 0
@@ -73,7 +80,7 @@ class ResultPanel extends Component {
                 if ( y === "TOTAL" ) continue
                 cells.push( this.createYakuColumn(y, yaku[y], yakuKey++) )
             }
-            cells.push( <hr key={"yaku " + yakuKey++} /> )
+            cells.push( <Grid item key={"yaku " + yakuKey++}><hr /></Grid> )
             cells.push( this.createYakuColumn("TOTAL", yaku["TOTAL"], yakuKey++) )
             cells.push( this.createTheFinalResultColumn(this.finalPoints(), yakuKey++) )
         }
@@ -89,7 +96,9 @@ class ResultPanel extends Component {
                         <Typography variant="headline" component="h3">
                             GAME RESULT <hr />
                         </Typography>
-                        { this.buildResult( this.props.valid, this.props.yaku ) }
+                        <Grid container direction="column">
+                            { this.buildResult( this.props.valid, this.props.yaku ) }
+                        </Grid>
                     </Paper>
                 </Grid>
             </Grid>
