@@ -8,7 +8,6 @@ import ResultContainer from './ResultContainer';
 import { Grid } from 'material-ui';
 
 class App extends Component {
-
   addTileToHand = ( num, type, arg = null ) => {
     this.refs.hand.addTiles( type, num, arg )
   }
@@ -25,7 +24,7 @@ class App extends Component {
     this.refs.result.calculatePoints( tiles, combis, args );
   }
 
-  removeResult = () => {
+  handleHandBeingBroken = () => {
     this.refs.result.removeResult();
   }
 
@@ -44,7 +43,7 @@ class App extends Component {
             <Grid container>
               <Grid item xs={3} />
               <Grid item>
-                <Hand ref='hand' id="hand-tiles" onFullHand={this.sendResult} onBreakHand={this.removeResult}/>
+                <Hand ref='hand' id="hand-tiles" onFullHand={this.sendResult} onBreakHand={this.handleHandBeingBroken}/>
               </Grid>
             </Grid>
           </Grid>

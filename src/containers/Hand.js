@@ -6,6 +6,9 @@ import { Grid } from 'material-ui';
 class Hand extends React.Component {
     constructor(props) {
         super(props);
+        this.id = "hand"
+        this.max = 14
+
         this.curTiles = {
             s: [0,0,0,0,0,0,0,0,0],
             m: [0,0,0,0,0,0,0,0,0],
@@ -16,10 +19,8 @@ class Hand extends React.Component {
         this.curCombis = [];
         // Takeaway: keep data that you intend to share across components in store.
         // I should put all tiles info to Redux store
-        this.id = "hand";
         this.amount = 0;
         this.amountAdded = 0;
-        this.max = 14;
         this.state = {
             tiles: []
         };
@@ -251,12 +252,11 @@ class Hand extends React.Component {
     }
 
     clearAllTiles() {
-        let newTiles = [];
         this.amount = 0;
         for (let type in this.curTiles) {
             this.curTiles[type] = this.curTiles[type].map(num => 0);
         }
-        this.setState({ tiles: newTiles });
+        this.setState({ tiles: [] });
     }
 
     render() {
