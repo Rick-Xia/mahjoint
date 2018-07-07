@@ -61,7 +61,7 @@ class ResultPanel extends Component {
         return cells
     }
 
-    render( ) {
+    render () {
         this.han = this.props.yaku.TOTAL
         return (
             <Grid container justify="center">
