@@ -11,6 +11,12 @@ const resultStyles = theme => ({
         marginTop: theme.spacing.unit * 3,
         minWidth: 700,
     }),
+    yaku: theme.mixins.gutters({
+        paddingLeft: "5%",
+    }),
+    han: theme.mixins.gutters({
+        marginLeft: "auto"
+    }),
 })
 
 class ResultPanel extends Component {
@@ -37,26 +43,39 @@ class ResultPanel extends Component {
         return retVal
     }
 
-    buildCells( valid, yaku ) {
-        let cells = []
+    createTheFinalResultColumn( han, key ) {
+        return (
+            <Typography component="p" key={"yaku " + key}>
+                { han }
+            </Typography>)
+    }
+
+    createYakuColumn( yaku, han, key ) {
+        return (
+            <Typography component="p" key={"yaku " + key}>
+                { yaku + ": " + han + " HAN" }
+            </Typography>)
+    }
+
+    buildResult( valid, yaku ) {
         if ( valid === 0 ) {
-            cells.push(
-                <Typography component="p" key={0}>Waiting for a complete hand</Typography>
-            )
-        } else if ( valid === -1 ) {
-            cells.push(
-                <Typography component="p" color="error" key={-1}>Invalid handtiles</Typography>
-            )
-        } else {
-            if ( !yaku ) console.log('no yaku received')
-            else {
-                console.log("yaku received " + JSON.stringify(yaku) )
-                let key = 234, result
-                for ( let y in yaku ) {
-                    result = <Typography component="p" key={key++}>{y + ": " + yaku[y] + " han"}</Typography>
-                    cells.push(result)
-                }
+            return <Typography component="p">Waiting for a complete hand</Typography>
+        }
+        if ( valid === -1 ) {
+            return <Typography component="p" color="error">Invalid Hand</Typography>
+        }
+
+        let cells = [], yakuKey = 0
+        if ( !yaku ) console.log('no yaku received')
+        else {
+            console.log("yaku received " + JSON.stringify(yaku))
+            for ( let y in yaku ) {
+                if ( y === "TOTAL" ) continue
+                cells.push( this.createYakuColumn(y, yaku[y], yakuKey++) )
             }
+            cells.push( <hr key={"yaku " + yakuKey++} /> )
+            cells.push( this.createYakuColumn("TOTAL", yaku["TOTAL"], yakuKey++) )
+            cells.push( this.createTheFinalResultColumn(this.finalPoints(), yakuKey++) )
         }
         return cells
     }
@@ -68,13 +87,13 @@ class ResultPanel extends Component {
                 <Grid item>
                     <Paper className={this.props.classes.root} elevation={4} >
                         <Typography variant="headline" component="h3">
-                            GAME RESULT {this.finalPoints()}
+                            GAME RESULT <hr />
                         </Typography>
-                        { this.buildCells( this.props.valid, this.props.yaku ) }
+                        { this.buildResult( this.props.valid, this.props.yaku ) }
                     </Paper>
                 </Grid>
             </Grid>
-        );
+        )
     }
 }
 

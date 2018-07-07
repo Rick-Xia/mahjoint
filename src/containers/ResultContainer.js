@@ -285,16 +285,21 @@ class Result extends Component {
 
     // 3 han
     honitsu ( yaku, menzi, janto, next ) {
-        let color = ( janto[0] !== 'd' )? janto[0] : 0
+        let honorAppeared = false, color
+        if ( janto[0] !== 'd' ) color = janto[0]
+        else honorAppeared = true
+
         for ( let m of menzi ) {
             if ( m[2] !== 'd' ) {
-                if ( color !== 0 && m[2] !== color ) {
+                if ( color && m[2] !== color ) {
                     return next( yaku, menzi, janto, next )
                 }
                 color = m[2]
+            } else {
+                honorAppeared = true
             }
         }
-        yaku["Half-flush"] = (this.monzen) ? 3 : 2
+        if ( honorAppeared ) yaku["Half-flush"] = (this.monzen) ? 3 : 2
         return next( yaku, menzi, janto, next )
     }
 
@@ -302,6 +307,7 @@ class Result extends Component {
 
     // liang beikou: finished above
 
+    // 6 han
     chinitsu ( yaku, menzi, janto, next ) {
         let color = janto[0]
         for ( let m of menzi ) {
